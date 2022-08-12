@@ -1,0 +1,71 @@
+<style>
+    #winBid-update {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="winBid-update">
+    <form class="layui-form" action="" lay-filter="winBid-update-form">
+        <div class="layui-form-item layui-hide">
+            <label class="layui-form-label febs-form-item-require">选标id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="wbId" data-th-value="${winBid.wbId}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="oId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">工厂id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="fId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="winBid-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'xmSelect', 'validate'], function () {
+        let $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            xmSelect = layui.xmSelect,
+            winBid = [[${winBid}]],
+            validate = layui.validate,
+            dataPermissionXmlSelect,
+            roleXmSelect,
+            deptXmlSelect;
+
+        form.verify(validate);
+        form.render();
+
+        initWinBidValue();
+
+        function initWinBidValue() {
+            form.val("winBid-update-form", {
+                "wbId": winBid.wbId,
+                "oId": winBid.oid,
+                "fId": winBid.fid
+            });
+        }
+
+        form.on('submit(winBid-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, winBid)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'winBid/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('选标订单修改成功');
+                $('#febs-winBid').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

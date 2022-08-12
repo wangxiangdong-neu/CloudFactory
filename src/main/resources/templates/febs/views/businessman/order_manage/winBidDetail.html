@@ -1,0 +1,52 @@
+<style>
+    #febs-winBid-detail #winBid-img, #febs-winBid-detail .winBid-info {
+        display: inline-block;
+        float: left;
+        margin-left: 15px;
+    }
+
+    #febs-winBid-detail #winBid-img img {
+        width: 7rem;
+        margin: 10px 10px 0 20px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    #febs-winBid-detail #winBid-info-wrapper {
+        margin: 0 0 1rem 0;
+        display: inline-block;
+    }
+
+    #febs-winBid-detail .winBid-info div {
+        margin: 10px 15px;
+        max-width: 19rem;
+    }
+
+    #febs-winBid-detail #options-wrapper a {
+        padding: 4px 6px;
+        color: rgba(0, 0, 0, 0.65);
+        border: 1px solid #d9d9d9;
+        border-radius: 2px;
+    }
+
+    #febs-winBid-detail #options-wrapper a:hover {
+        color: #40a9ff;
+        border-color: #40a9ff;
+    }
+
+</style>
+<div class="layui-fluid" id="febs-winBid-detail" lay-title="选标信息">
+    <div id="winBid-info-wrapper">
+        <div class="winBid-info">
+            <div> 选标id：
+                [[${winBid.wbId}]]
+            </div>
+            <div> 订单id：
+                [[${winBid.oId}]]
+            </div>
+            <div> 工厂id：
+                [[${winBid.fId}]]
+            </div>
+        </div>
+    </div>
+</div>

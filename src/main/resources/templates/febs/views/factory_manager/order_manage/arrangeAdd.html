@@ -1,0 +1,73 @@
+<style>
+    #arrange-add {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="arrange-add">
+    <form class="layui-form" action="" lay-filter="arrange-add-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="oId" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="dId" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">开始日期：</label>
+            <div class="layui-input-block">
+                <input type="text" name="startDate" id="arrange-startDate" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">结束日期：</label>
+            <div class="layui-input-block">
+                <input type="text" name="endDate" id="arrange-endDate" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="arrange-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form','laydate', 'validate', 'xmSelect'], function () {
+        let $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            laydate = layui.laydate,
+            form = layui.form,
+            xmSelect = layui.xmSelect,
+            validate = layui.validate,
+            dataPermissionXmlSelect,
+            roleXmSelect,
+            deptXmlSelect;
+
+        form.verify(validate);
+        form.render();
+
+        laydate.render({
+            elem: '#arrange-startDate',
+            trigger: 'click'
+        });
+        laydate.render({
+            elem: '#arrange-endDate',
+            trigger: 'click'
+        });
+
+        form.on('submit(arrange-add-form-submit)', function (data) {
+            febs.post(ctx + 'arrange', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('新增排产成功');
+                $('#febs-arrange').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

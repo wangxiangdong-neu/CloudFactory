@@ -1,0 +1,136 @@
+<style>
+    #userorder-update {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="userorder-update">
+    <form class="layui-form" action="" lay-filter="userorder-update-form">
+        <div class="layui-form-item layui-hide">
+            <label class="layui-form-label febs-form-item-require">订单id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="oId" data-th-value="${userorder.oId}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单编码：</label>
+            <div class="layui-input-block">
+                <input type="text" name="ordercode" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="productName" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">订购数量：</label>
+            <div class="layui-input-block">
+                <input type="text" name="purchaseQuantity" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">交付日期：</label>
+            <div class="layui-input-block">
+                <input type="text" name="deliveryDate" id="userorder-deliveryDate" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">投标截止日期：</label>
+            <div class="layui-input-block">
+                <input type="text" name="bidDeadline" id="userorder-bidDeadline" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">收货人：</label>
+            <div class="layui-input-block">
+                <input type="text" name="receiver" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系方式：</label>
+            <div class="layui-input-block">
+                <input type="text" name="recContact" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">收货人地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="recAddress" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单状态：</label>
+            <div class="layui-input-block">
+                <select name="status">
+                    <option value="">请选择</option>
+                    <option value="已发布">已发布</option>
+                    <option value="已中标">已中标</option>
+                    <option value="投标结束">投标结束</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="userorder-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'laydate', 'xmSelect', 'validate'], function () {
+        let $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            laydate = layui.laydate,
+            form = layui.form,
+            xmSelect = layui.xmSelect,
+            userorder = [[${userorder}]],
+            validate = layui.validate,
+            dataPermissionXmlSelect,
+            roleXmSelect,
+            deptXmlSelect;
+
+        form.verify(validate);
+        form.render();
+
+        laydate.render({
+            elem: '#userorder-deliveryDate',
+            trigger: 'click'
+        });
+        laydate.render({
+            elem: '#userorder-bidDeadline',
+            trigger: 'click'
+        });
+
+
+        initUseroderValue();
+
+        function initUseroderValue() {
+            form.val("userorder-update-form", {
+                "oId": userorder.oid,
+                "ordercode": userorder.ordercode,
+                "productName": userorder.productName,
+                "purchaseQuantity": userorder.purchaseQuantity,
+                "deliveryDate": userorder.deliveryDate,
+                "bidDeadline": userorder.bidDeadline,
+                "receiver": userorder.receiver,
+                "recContact": userorder.recContact,
+                "recAddress": userorder.recAddress,
+                "status": userorder.status
+            });
+        }
+
+        form.on('submit(userorder-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, userorder)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'userorder/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('订单数据修改成功');
+                $('#febs-userorder').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

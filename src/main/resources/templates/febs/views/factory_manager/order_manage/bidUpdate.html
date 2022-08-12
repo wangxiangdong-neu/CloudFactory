@@ -1,0 +1,78 @@
+<style>
+    #bid-update {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="bid-update">
+    <form class="layui-form" action="" lay-filter="bid-update-form">
+        <div class="layui-form-item layui-hide">
+            <label class="layui-form-label febs-form-item-require">竞标id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="bId" data-th-value="${bid.bId}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">工厂id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="fId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="oId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">价格：</label>
+            <div class="layui-input-block">
+                <input type="text" name="price" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="bid-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'xmSelect', 'validate'], function () {
+        let $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            xmSelect = layui.xmSelect,
+            bid = [[${bid}]],
+            validate = layui.validate,
+            dataPermissionXmlSelect,
+            roleXmSelect,
+            deptXmlSelect;
+
+        form.verify(validate);
+        form.render();
+
+        initBidValue();
+
+        function initBidValue() {
+            form.val("bid-update-form", {
+                "bId": bid.bid,
+                "fId": bid.fid,
+                "oId": bid.oid,
+                "price": bid.price
+            });
+        }
+
+        form.on('submit(bid-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, bid)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'bid/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('竞标订单修改成功');
+                $('#febs-bid').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

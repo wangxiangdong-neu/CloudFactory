@@ -1,0 +1,64 @@
+<style>
+    #deviceType-update {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="deviceType-update">
+    <form class="layui-form" action="" lay-filter="deviceType-update-form">
+        <div class="layui-form-item layui-hide">
+            <label class="layui-form-label febs-form-item-require">设备类型id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="dtId" data-th-value="${deviceType.dtId}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备类型：</label>
+            <div class="layui-input-block">
+                <input type="text" name="type" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="deviceType-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'xmSelect', 'validate'], function () {
+        let $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            xmSelect = layui.xmSelect,
+            deviceType = [[${deviceType}]],
+            validate = layui.validate,
+            dataPermissionXmlSelect,
+            roleXmSelect,
+            deptXmlSelect;
+
+        form.verify(validate);
+        form.render();
+
+        initDeviceTypeValue();
+
+        function initDeviceTypeValue() {
+            form.val("deviceType-update-form", {
+                "dtId": deviceType.dtId,
+                "type": deviceType.type
+            });
+        }
+
+        form.on('submit(deviceType-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, deviceType)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'deviceType/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('设备类型 '+deviceType.type + ' 修改成功');
+                $('#febs-deviceType').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

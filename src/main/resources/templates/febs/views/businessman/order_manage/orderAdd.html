@@ -1,0 +1,108 @@
+<style>
+    #userorder-add {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="userorder-add">
+    <form class="layui-form" action="" lay-filter="userorder-add-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单编码：</label>
+            <div class="layui-input-block">
+                <input type="text" name="ordercode" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="productName" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">订购数量：</label>
+            <div class="layui-input-block">
+                <input type="text" name="purchaseQuantity" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">交付日期：</label>
+            <div class="layui-input-block">
+                <input type="text" name="deliveryDate" id="userorder-deliveryDate" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">投标截止日期：</label>
+            <div class="layui-input-block">
+                <input type="text" name="bidDeadline" id="userorder-bidDeadline" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">收货人：</label>
+            <div class="layui-input-block">
+                <input type="text" name="receiver" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系方式：</label>
+            <div class="layui-input-block">
+                <input type="text" name="recContact" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">收货人地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="recAddress" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单状态：</label>
+            <div class="layui-input-block">
+                <select name="status">
+                    <option value="">请选择</option>
+                    <option value="已发布">已发布</option>
+                    <option value="已中标">已中标</option>
+                    <option value="投标结束">投标结束</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="userorder-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'laydate','validate', 'xmSelect'], function () {
+        let $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            laydate = layui.laydate,
+            form = layui.form,
+            xmSelect = layui.xmSelect,
+            validate = layui.validate,
+            dataPermissionXmlSelect,
+            roleXmSelect,
+            deptXmlSelect;
+
+        form.verify(validate);
+        form.render();
+
+        laydate.render({
+            elem: '#userorder-deliveryDate',
+            trigger: 'click'
+        });
+        laydate.render({
+            elem: '#userorder-bidDeadline',
+            trigger: 'click'
+        });
+
+        form.on('submit(userorder-add-form-submit)', function (data) {
+            febs.post(ctx + 'userorder', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('新增订单成功');
+                $('#febs-userorder').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

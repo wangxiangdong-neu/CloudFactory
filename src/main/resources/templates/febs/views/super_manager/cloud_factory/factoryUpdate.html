@@ -1,0 +1,86 @@
+<style>
+    #factory-update {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="factory-update">
+    <form class="layui-form" action="" lay-filter="factory-update-form">
+        <div class="layui-form-item layui-hide">
+            <label class="layui-form-label febs-form-item-require">云工厂id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="fId" data-th-value="${factory.fId}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属用户id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="uId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">工厂名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="fname" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">工厂简介：</label>
+            <div class="layui-input-block">
+                <input type="text" name="introduction" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">工厂状态：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="正常" title="正常" checked="">
+                <input type="radio" name="status" value="关停" title="关停">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="factory-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'xmSelect', 'validate'], function () {
+        let $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            xmSelect = layui.xmSelect,
+            factory = [[${factory}]],
+            validate = layui.validate,
+            dataPermissionXmlSelect,
+            roleXmSelect,
+            deptXmlSelect;
+
+        form.verify(validate);
+        form.render();
+
+        initFactoryValue();
+
+        function initFactoryValue() {
+            form.val("factory-update-form", {
+                "fId": factory.fid,
+                "uId": factory.uid,
+                "fname": factory.fname,
+                "introduction": factory.introduction,
+                "status": factory.status
+            });
+        }
+
+        form.on('submit(factory-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, factory)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'factory/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success(factory.fname + ' 工厂数据修改成功');
+                $('#febs-factory').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

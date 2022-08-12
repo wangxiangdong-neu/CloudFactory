@@ -1,0 +1,58 @@
+<style>
+    #febs-arrange-detail #arrange-img, #febs-arrange-detail .arrange-info {
+        display: inline-block;
+        float: left;
+        margin-left: 15px;
+    }
+
+    #febs-arrange-detail #arrange-img img {
+        width: 7rem;
+        margin: 10px 10px 0 20px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    #febs-arrange-detail #arrange-info-wrapper {
+        margin: 0 0 1rem 0;
+        display: inline-block;
+    }
+
+    #febs-arrange-detail .arrange-info div {
+        margin: 10px 15px;
+        max-width: 19rem;
+    }
+
+    #febs-arrange-detail #options-wrapper a {
+        padding: 4px 6px;
+        color: rgba(0, 0, 0, 0.65);
+        border: 1px solid #d9d9d9;
+        border-radius: 2px;
+    }
+
+    #febs-arrange-detail #options-wrapper a:hover {
+        color: #40a9ff;
+        border-color: #40a9ff;
+    }
+
+</style>
+<div class="layui-fluid" id="febs-arrange-detail" lay-title="排产信息">
+    <div id="arrange-info-wrapper">
+        <div class="arrange-info">
+            <div> 排产id：
+                [[${arrange.aId}]]
+            </div>
+            <div> 订单id：
+                [[${arrange.oId}]]
+            </div>
+            <div> 设备id：
+                [[${arrange.dId}]]
+            </div>
+            <div> 开始日期：
+                [[${arrange.startDate}]]
+            </div>
+            <div> 结束日期：
+                [[${arrange.endDate}]]
+            </div>
+        </div>
+    </div>
+</div>

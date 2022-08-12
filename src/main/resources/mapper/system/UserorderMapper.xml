@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.cloudfactory.system.mapper.UserorderMapper">
+    <sql id="countUserorderDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        userorder o
+        WHERE 1 = 1
+        <if test="userorder.oId != null and userorder.oId != ''">
+            AND o.o_id = #{userorder.oId}
+        </if>
+        <if test="userorder.ordercode != null and userorder.ordercode != ''">
+            AND o.ordercode = #{userorder.ordercode}
+        </if>
+        <if test="userorder.productName != null and userorder.productName != ''">
+            AND o.product_name = #{userorder.productName}
+        </if>
+        <if test="userorder.purchaseQuantity != null and userorder.purchaseQuantity != ''">
+            AND o.purchase_quantity = #{userorder.purchaseQuantity}
+        </if>
+        <if test="userorder.deliveryDate != null and userorder.deliveryDate != ''">
+            AND o.delivery_date = #{userorder.deliveryDate}
+        </if>
+        <if test="userorder.bidDeadline != null and userorder.bidDeadline != ''">
+            AND o.bid_deadline = #{userorder.bidDeadline}
+        </if>
+        <if test="userorder.recContact != null and userorder.recContact != ''">
+            AND o.rec_contact = #{userorder.recContact}
+        </if>
+        <if test="userorder.recAddress != null and userorder.recAddress != ''">
+            AND o.rec_address = #{userorder.recAddress}
+        </if>
+        <if test="userorder.status != null and userorder.status != ''">
+            AND o.status = #{userorder.status}
+        </if>
+        <if test="userorder.receiver != null and userorder.receiver != ''">
+            AND o.receiver = #{userorder.receiver}
+        </if>
+    </sql>
+
+    <sql id="findUserorderDetailSql">
+        SELECT
+        o.o_id oId,
+        o.ordercode ordercode,
+        o.product_name productName,
+        o.purchase_quantity purchaseQuantity,
+        o.delivery_date deliveryDate,
+        o.bid_deadline bidDeadline,
+        o.receiver receiver,
+        o.rec_contact recContact,
+        o.rec_address recAddress,
+        o.status status
+        FROM
+        userorder o
+        WHERE 1 = 1
+        <if test="userorder.oId != null and userorder.oId != ''">
+            AND o.o_id = #{userorder.oId}
+        </if>
+        <if test="userorder.ordercode != null and userorder.ordercode != ''">
+            AND o.ordercode = #{userorder.ordercode}
+        </if>
+        <if test="userorder.productName != null and userorder.productName != ''">
+            AND o.product_name = #{userorder.productName}
+        </if>
+        <if test="userorder.purchaseQuantity != null and userorder.purchaseQuantity != ''">
+            AND o.purchase_quantity = #{userorder.purchaseQuantity}
+        </if>
+        <if test="userorder.deliveryDate != null and userorder.deliveryDate != ''">
+            AND o.delivery_date = #{userorder.deliveryDate}
+        </if>
+        <if test="userorder.bidDeadline != null and userorder.bidDeadline != ''">
+            AND o.bid_deadline = #{userorder.bidDeadline}
+        </if>
+        <if test="userorder.recContact != null and userorder.recContact != ''">
+            AND o.rec_contact = #{userorder.recContact}
+        </if>
+        <if test="userorder.recAddress != null and userorder.recAddress != ''">
+            AND o.rec_address = #{userorder.recAddress}
+        </if>
+        <if test="userorder.status != null and userorder.status != ''">
+            AND o.status = #{userorder.status}
+        </if>
+        <if test="userorder.receiver != null and userorder.receiver != ''">
+            AND o.receiver = #{userorder.receiver}
+        </if>
+    </sql>
+
+    <select id="countUserorderDetail" parameterType="userorder" resultType="long">
+        <include refid="countUserorderDetailSql"/>
+    </select>
+
+    <select id="findUserorderDetailPage" parameterType="userorder" resultType="userorder">
+        <include refid="findUserorderDetailSql"/>
+    </select>
+
+    <select id="findUserorderDetail" parameterType="userorder" resultType="userorder">
+        <include refid="findUserorderDetailSql"/>
+    </select>
+
+    <select id="findByName" parameterType="string" resultType="userorder">
+        SELECT
+            o.o_id oId,
+            o.ordercode ordercode,
+            o.product_name productName,
+            o.purchase_quantity purchaseQuantity,
+            o.delivery_date deliveryDate,
+            o.bid_deadline bidDeadline,
+            o.receiver receiver,
+            o.rec_contact recContact,
+            o.rec_address recAddress,
+            o.status status
+        FROM
+            userorder o
+        WHERE  o.ordercode = #{userorder.ordercode}
+    </select>
+    <select id="findByoId" parameterType="long" resultType="userorder">
+        SELECT
+            o.o_id oId,
+            o.ordercode ordercode,
+            o.product_name productName,
+            o.purchase_quantity purchaseQuantity,
+            o.delivery_date deliveryDate,
+            o.bid_deadline bidDeadline,
+            o.receiver receiver,
+            o.rec_contact recContact,
+            o.rec_address recAddress,
+            o.status status
+        FROM
+            userorder o
+        WHERE  o.o_id = #{oId}
+    </select>
+</mapper>

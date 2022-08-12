@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.cloudfactory.system.mapper.DeviceTypeMapper">
+    <sql id="countDeviceTypeDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        device_type dt
+        WHERE 1 = 1
+        <if test="deviceType.type != null and deviceType.type != ''">
+            AND dt.type = #{deviceType.type}
+        </if>
+        <if test="deviceType.dtId != null and deviceType.dtId != ''">
+            AND dt.dt_id = #{deviceType.dtId}
+        </if>
+    </sql>
+
+    <sql id="findDeviceTypeDetailSql">
+        SELECT
+        dt.dt_id dtId,
+        dt.type type
+        FROM
+        device_type dt
+        WHERE 1 = 1
+        <if test="deviceType.type != null and deviceType.type != ''">
+            AND dt.type = #{deviceType.type}
+        </if>
+        <if test="deviceType.dtId != null and deviceType.dtId != ''">
+            AND dt.dt_id = #{deviceType.dtId}
+        </if>
+    </sql>
+
+    <select id="countDeviceTypeDetail" parameterType="deviceType" resultType="long">
+        <include refid="countDeviceTypeDetailSql"/>
+    </select>
+
+    <select id="findDeviceTypeDetailPage" parameterType="deviceType" resultType="deviceType">
+        <include refid="findDeviceTypeDetailSql"/>
+    </select>
+
+    <select id="findDeviceTypeDetail" parameterType="deviceType" resultType="deviceType">
+        <include refid="findDeviceTypeDetailSql"/>
+    </select>
+
+    <select id="findByName" parameterType="string" resultType="deviceType">
+        SELECT
+            dt.dt_id dtId,
+            dt.type type
+        FROM
+            device_type dt
+        WHERE  dt.type = #{deviceType.type}
+    </select>
+    <select id="findBydtId" parameterType="long" resultType="deviceType">
+        SELECT
+            dt.dt_id dtId,
+            dt.type type
+        FROM
+            device_type dt
+        WHERE  dt.dt_id = #{dtId}
+    </select>
+</mapper>

@@ -1,0 +1,55 @@
+<style>
+    #febs-bid-detail #bid-img, #febs-bid-detail .bid-info {
+        display: inline-block;
+        float: left;
+        margin-left: 15px;
+    }
+
+    #febs-bid-detail #bid-img img {
+        width: 7rem;
+        margin: 10px 10px 0 20px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    #febs-bid-detail #bid-info-wrapper {
+        margin: 0 0 1rem 0;
+        display: inline-block;
+    }
+
+    #febs-bid-detail .bid-info div {
+        margin: 10px 15px;
+        max-width: 19rem;
+    }
+
+    #febs-bid-detail #options-wrapper a {
+        padding: 4px 6px;
+        color: rgba(0, 0, 0, 0.65);
+        border: 1px solid #d9d9d9;
+        border-radius: 2px;
+    }
+
+    #febs-bid-detail #options-wrapper a:hover {
+        color: #40a9ff;
+        border-color: #40a9ff;
+    }
+
+</style>
+<div class="layui-fluid" id="febs-bid-detail" lay-title="竞标订单信息">
+    <div id="bid-info-wrapper">
+        <div class="bid-info">
+            <div> 竞标id：
+                [[${bid.bId}]]
+            </div>
+            <div> 工厂id：
+                [[${bid.fId}]]
+            </div>
+            <div> 订单id：
+                [[${bid.oId}]]
+            </div>
+            <div> 竞标价格：
+                [[${bid.price}]]
+            </div>
+        </div>
+    </div>
+</div>

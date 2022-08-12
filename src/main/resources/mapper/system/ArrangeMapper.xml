@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.cloudfactory.system.mapper.ArrangeMapper">
+    <sql id="countArrangeDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        arrange a
+        WHERE 1 = 1
+        <if test="arrange.startDate != null and arrange.startDate != ''">
+        AND a.start_date = #{arrange.startDate}
+        </if>
+        <if test="arrange.endDate != null and arrange.endDate != ''">
+            AND a.end_date = #{arrange.endDate}
+        </if>
+        <if test="arrange.aId != null and arrange.aId != ''">
+            AND a.a_id = #{arrange.aId}
+        </if>
+        <if test="arrange.oId != null and arrange.oId != ''">
+            AND a.o_id = #{arrange.oId}
+        </if>
+        <if test="arrange.dId != null and arrange.dId != ''">
+            AND a.d_id = #{arrange.dId}
+        </if>
+    </sql>
+
+    <sql id="findArrangeDetailSql">
+        SELECT
+        a.a_id aId,
+        a.o_id oId,
+        a.d_id dId,
+        a.start_date startDate,
+        a.end_date endDate
+        FROM
+        arrange a
+        WHERE 1 = 1
+        <if test="arrange.startDate != null and arrange.startDate != ''">
+            AND a.start_date = #{arrange.startDate}
+        </if>
+        <if test="arrange.endDate != null and arrange.endDate != ''">
+            AND a.end_date = #{arrange.endDate}
+        </if>
+        <if test="arrange.aId != null and arrange.aId != ''">
+            AND a.a_id = #{arrange.aId}
+        </if>
+        <if test="arrange.oId != null and arrange.oId != ''">
+            AND a.o_id = #{arrange.oId}
+        </if>
+        <if test="arrange.dId != null and arrange.dId != ''">
+            AND a.d_id = #{arrange.dId}
+        </if>
+    </sql>
+
+    <select id="countArrangeDetail" parameterType="arrange" resultType="long">
+        <include refid="countArrangeDetailSql"/>
+    </select>
+
+    <select id="findArrangeDetailPage" parameterType="arrange" resultType="arrange">
+        <include refid="findArrangeDetailSql"/>
+    </select>
+
+    <select id="findArrangeDetail" parameterType="arrange" resultType="arrange">
+        <include refid="findArrangeDetailSql"/>
+    </select>
+
+    <select id="findByName" parameterType="string" resultType="arrange">
+        SELECT
+            a.a_id aId,
+            a.o_id oId,
+            a.d_id dId,
+            a.start_date startDate,
+            a.end_date endDate
+        FROM
+            arrange a
+        WHERE  a.start_date = #{arrange.startDate}
+    </select>
+    <select id="findByaId" parameterType="long" resultType="arrange">
+        SELECT
+            a.a_id aId,
+            a.o_id oId,
+            a.d_id dId,
+            a.start_date startDate,
+            a.end_date endDate
+        FROM
+            arrange a
+        WHERE  a.a_id = #{aId}
+    </select>
+</mapper>

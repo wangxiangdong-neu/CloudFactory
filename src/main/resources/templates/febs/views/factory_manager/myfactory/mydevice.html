@@ -1,0 +1,292 @@
+<head xmlns:shiro="http://www.w3.org/1999/xhtml">
+    <meta charset="utf-8">
+</head>
+<style>
+    #febs-device xm-select {
+        min-height: 30px;
+        line-height: 30px;
+    }
+    #febs-device xm-select > .xm-label .scroll .label-content {
+        display: flex;
+        padding: 0 30px 0 10px;
+    }
+</style>
+<div class="layui-fluid layui-anim febs-anim" id="febs-device" lay-title="设备信息列表">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="device-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">设备编码</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="code" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">设备名称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="name" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">设备状态</label>
+                                        <div class="layui-input-inline">
+                                            <select name="deviceStatus">
+                                                <option value="">请选择</option>
+                                                <option value="闲置中">闲置中</option>
+                                                <option value="生产中">生产中</option>
+                                                <option value="已关闭">已关闭</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">设备类型</label>
+                                        <div class="layui-input-inline">
+                                            <select name="dtId">
+                                                <option value="">请选择</option>
+                                                <option value="1">车床</option>
+                                                <option value="2">铣床</option>
+                                                <option value="3">镗床</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">租用状态</label>
+                                        <div class="layui-input-inline">
+                                            <select name="rentalStatus">
+                                                <option value="">请选择</option>
+                                                <option value="未被租用">未被租用</option>
+                                                <option value="已被租用">已被租用</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain table-action" id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain table-action" id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table lay-filter="deviceTable" lay-data="{id: 'deviceTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="device-type">
+    {{#
+    let dtId = {
+    1: {title: '车床'},
+    2: {title: '铣床'},
+    3: {title: '镗床'}
+    }[d.dtId];
+    }}
+    <span>{{ dtId.title }}</span>
+</script>
+<script type="text/html" id="device-factory">
+    {{#
+    let fid = {
+    2: {title: '云工厂2', color: 'blue'},
+    1: {title: '云工厂1', color: 'green'},
+    3: {title: '产能中心', color: 'red'}
+    }[d.fid];
+    }}
+    <span class="layui-badge febs-bg-{{fid.color}}">{{ fid.title }}</span>
+</script>
+<script type="text/html" id="device-option">
+    <a lay-event="detail"><i
+            class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
+    <a lay-event="edit"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+    <a lay-event="del"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'xmSelect'], function () {
+        let $ = layui.jquery,
+            laydate = layui.laydate,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            dropdown = layui.dropdown,
+            $view = $('#febs-device'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'dId', type: null},
+            tableIns,
+            createTimeFrom,
+            createTimeTo,
+            deptXmlSelect;
+
+        form.render();
+
+        initTable();
+
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                let checkStatus = table.checkStatus('deviceTable');
+                if (name === 'add') {
+                    febs.modal.open('新增设备', 'factory_manager/myfactory/mydeviceAdd', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        yes: function (index, layero) {
+                            $('#device-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#device-add').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+                if (name === 'delete') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要删除的设备');
+                    } else {
+                        febs.modal.confirm('删除设备', '确定删除该设备？', function () {
+                            let deviceIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                deviceIds.push(item.did)
+                            });
+                            deleteDevices(deviceIds.join(','));
+                        });
+                    }
+                }
+                if (name === 'rental') {
+                    febs.modal.open('租用设备', 'factory_manager/myfactory/mydeviceAdd', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        yes: function (index, layero) {
+                            $('#device-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#device-add').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+            },
+            options: [{
+                name: 'add',
+                title: '新增设备'
+            }, {
+                name: 'delete',
+                title: '删除设备'
+            },{
+                name: 'rental',
+                title: '租用设备'
+            }]
+        });
+
+        table.on('tool(deviceTable)', function (obj) {
+            let data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'detail') {
+                febs.modal.view('设备信息', 'factory_manager/myfactory/mydeviceDetail/' + data.did, {
+                    area: $(window).width() <= 750 ? '95%' : '660px'
+                });
+            }
+            if (layEvent === 'del') {
+                febs.modal.confirm('删除设备', '确定删除该设备？', function () {
+                    deleteDevices(data.did);
+                });
+            }
+            if (layEvent === 'edit') {
+                febs.modal.open('修改设备', 'factory_manager/myfactory/mydeviceUpdate/' + data.did, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#device-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        });
+
+        table.on('sort(deviceTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+        $query.on('click', function () {
+            let params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            sortObject.type = 'null';
+            deptXmlSelect.setValue(['']);
+            createTimeTo = null;
+            createTimeFrom = null;
+            tableIns.reload({where: getQueryParams(true), page: {curr: 1}, initSort: sortObject});
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'deviceTable',
+                url: ctx + 'device/flist',
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'did', title: '设备id'},
+                    {title: '所属工厂', templet: '#device-factory',minWidth: 100},
+                    {title: '设备类型', templet: '#device-type',minWidth: 100},
+                    {field: 'code', title: '设备编码'},
+                    {field: 'name', title: '设备名称', minWidth: 120},
+                    {field: 'format', title: '规格', minWidth: 100},
+                    {field: 'introduction', title: '设备描述', minWidth: 100},
+                    {field: 'deviceStatus', title: '设备状态',minWidth: 100},
+                    {field: 'rentalStatus', title: '租用状态',minWidth: 100},
+                    {field: 'dresource', title: '设备来源', minWidth: 100},
+                    {title: '操作', toolbar: '#device-option', minWidth: 140}
+                ]]
+            });
+        }
+
+        function getQueryParams(flag) {
+            // deptId = deptXmlSelect.getValue('valueStr');
+            // if (flag) {
+            //     deptId = '';
+            // }
+            let params = $searchForm.serializeJson();
+            // params.fId = 1;
+            // let createTime = params.time;
+            // if (createTime) {
+            //     createTimeFrom = createTime.split(' - ')[0];
+            //     createTimeTo = createTime.split(' - ')[1];
+            // }
+            // params.invalidate_ie_cache = new Date();
+            // params.createTimeFrom = createTimeFrom;
+            // params.createTimeTo = createTimeTo;
+            return params;
+        }
+
+        function deleteDevices(deviceIds) {
+            febs.get(ctx + 'device/delete/' + deviceIds, null, function () {
+                febs.alert.success('删除设备成功');
+                $query.click();
+            });
+        }
+    })
+</script>

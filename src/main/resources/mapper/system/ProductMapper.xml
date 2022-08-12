@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.cloudfactory.system.mapper.ProductMapper">
+    <sql id="countProductDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        product p
+        WHERE 1 = 1
+        <if test="product.name != null and product.name != ''">
+            AND p.name = #{product.name}
+        </if>
+        <if test="product.pId != null and product.pId != ''">
+            AND p.p_id = #{product.pId}
+        </if>
+        <if test="product.ptId != null and product.ptId != ''">
+            AND p.pt_id = #{product.ptId}
+        </if>
+        <if test="product.code != null and product.code != ''">
+            AND p.code = #{product.code}
+        </if>
+        <if test="product.description != null and product.description != ''">
+            AND p.description = #{product.description}
+        </if>
+        <if test="product.format != null and product.format != ''">
+            AND p.format = #{product.format}
+        </if>
+        <if test="product.superiorId != null and product.superiorId != ''">
+            AND p.superior_id = #{product.superiorId}
+        </if>
+    </sql>
+
+    <sql id="findProductDetailSql">
+        SELECT
+        p.p_id pId,
+        p.pt_id ptId,
+        p.code code,
+        p.name name,
+        p.description description,
+        p.format format,
+        p.superior_id superiorId
+        FROM
+        product p
+        WHERE 1 = 1
+        <if test="product.name != null and product.name != ''">
+            AND p.name = #{product.name}
+        </if>
+        <if test="product.pId != null and product.pId != ''">
+            AND p.p_id = #{product.pId}
+        </if>
+        <if test="product.ptId != null and product.ptId != ''">
+            AND p.pt_id = #{product.ptId}
+        </if>
+        <if test="product.code != null and product.code != ''">
+            AND p.code = #{product.code}
+        </if>
+        <if test="product.description != null and product.description != ''">
+            AND p.description = #{product.description}
+        </if>
+        <if test="product.format != null and product.format != ''">
+            AND p.format = #{product.format}
+        </if>
+        <if test="product.superiorId != null and product.superiorId != ''">
+            AND p.superior_id = #{product.superiorId}
+        </if>
+    </sql>
+
+    <select id="countProductDetail" parameterType="product" resultType="long">
+        <include refid="countProductDetailSql"/>
+    </select>
+
+    <select id="findProductDetailPage" parameterType="product" resultType="product">
+        <include refid="findProductDetailSql"/>
+    </select>
+
+    <select id="findProductDetail" parameterType="product" resultType="product">
+        <include refid="findProductDetailSql"/>
+    </select>
+
+    <select id="findByName" parameterType="string" resultType="product">
+        SELECT
+            p.p_id pId,
+            p.pt_id ptId,
+            p.code code,
+            p.name name,
+            p.description description,
+            p.superior_id superiorId,
+            p.format format
+        FROM
+            product p
+        WHERE  p.name = #{product.name}
+    </select>
+    <select id="findBypId" parameterType="long" resultType="product">
+        SELECT
+            p.p_id pId,
+            p.pt_id ptId,
+            p.code code,
+            p.name name,
+            p.description description,
+            p.format format,
+            p.superior_id superiorId
+        FROM
+            product p
+        WHERE  p.p_id = #{pId}
+    </select>
+</mapper>

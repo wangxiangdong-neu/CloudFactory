@@ -1,0 +1,73 @@
+<style>
+    #febs-userorder-detail #userorder-img, #febs-userorder-detail .userorder-info {
+        display: inline-block;
+        float: left;
+        margin-left: 15px;
+    }
+
+    #febs-userorder-detail #userorder-img img {
+        width: 7rem;
+        margin: 10px 10px 0 20px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    #febs-userorder-detail #userorder-info-wrapper {
+        margin: 0 0 1rem 0;
+        display: inline-block;
+    }
+
+    #febs-userorder-detail .userorder-info div {
+        margin: 10px 15px;
+        max-width: 19rem;
+    }
+
+    #febs-userorder-detail #options-wrapper a {
+        padding: 4px 6px;
+        color: rgba(0, 0, 0, 0.65);
+        border: 1px solid #d9d9d9;
+        border-radius: 2px;
+    }
+
+    #febs-userorder-detail #options-wrapper a:hover {
+        color: #40a9ff;
+        border-color: #40a9ff;
+    }
+
+</style>
+<div class="layui-fluid" id="febs-userorder-detail" lay-title="订单信息">
+    <div id="userorder-info-wrapper">
+        <div class="userorder-info">
+            <div> 订单id：
+                [[${userorder.oId}]]
+            </div>
+            <div> 订单编码：
+                [[${userorder.ordercode}]]
+            </div>
+            <div> 产品名称：
+                [[${userorder.productName}]]
+            </div>
+            <div> 订购数量：
+                [[${userorder.purchaseQuantity}]]
+            </div>
+            <div> 交付日期：
+                [[${userorder.deliveryDate}]]
+            </div>
+            <div> 投标截止日期：
+                [[${userorder.bidDeadline}]]
+            </div>
+            <div> 收货人：
+                [[${userorder.receiver}]]
+            </div>
+            <div> 联系方式：
+                [[${userorder.recContact}]]
+            </div>
+            <div> 收货人地址：
+                [[${userorder.recAddress}]]
+            </div>
+            <div> 订单状态：
+                [[${userorder.status}]]
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,124 @@
+<style>
+    #device-update {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="device-update">
+    <form class="layui-form" action="" lay-filter="device-update-form">
+        <div class="layui-form-item layui-hide">
+            <label class="layui-form-label febs-form-item-require">设备id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="dId" data-th-value="${device.dId}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属工厂id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="fId"  class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备类型：</label>
+            <div class="layui-input-block">
+                <select name="dtId">
+                    <option value="">请选择</option>
+                    <option value="1">车床</option>
+                    <option value="2">铣床</option>
+                    <option value="3">镗床</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备编码：</label>
+            <div class="layui-input-block">
+                <input type="text" name="code" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">设备名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" data-th-id="${device.dId}" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备规格：</label>
+            <div class="layui-input-block">
+                <input type="text" name="format" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备描述：</label>
+            <div class="layui-input-block">
+                <input type="text" name="introduction" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备状态：</label>
+            <div class="layui-input-block">
+                <input type="text" name="deviceStatus" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">租用状态：</label>
+            <div class="layui-input-block">
+                <input type="text" name="rentalStatus" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备来源：</label>
+            <div class="layui-input-block">
+                <input type="text" name="dResource" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="device-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'xmSelect', 'validate'], function () {
+        let $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            xmSelect = layui.xmSelect,
+            device = [[${device}]],
+            validate = layui.validate,
+            dataPermissionXmlSelect,
+            roleXmSelect,
+            deptXmlSelect;
+
+        form.verify(validate);
+        form.render();
+
+        initDeviceValue();
+
+        function initDeviceValue() {
+            form.val("device-update-form", {
+                "fId": device.fid,
+                "dtId": device.dtid,
+                "code": device.code,
+                "name": device.name,
+                "format": device.format,
+                "introduction": device.introduction,
+                "deviceStatus": device.deviceStatus,
+                "rentalStatus": device.rentalStatus,
+                "dResource": device.dresource
+            });
+        }
+
+        form.on('submit(device-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, device)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'device/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success(device.name + ' 设备数据修改成功');
+                $('#febs-device').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

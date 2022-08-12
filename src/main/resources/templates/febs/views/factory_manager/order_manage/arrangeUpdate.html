@@ -1,0 +1,95 @@
+<style>
+    #arrange-update {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="arrange-update">
+    <form class="layui-form" action="" lay-filter="arrange-update-form">
+        <div class="layui-form-item layui-hide">
+            <label class="layui-form-label febs-form-item-require">排产id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="aId" data-th-value="${arrange.aId}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="oId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="dId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">开始日期：</label>
+            <div class="layui-input-block">
+                <input type="text" name="startDate" id="arrange-startDate" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">结束日期：</label>
+            <div class="layui-input-block">
+                <input type="text" name="endDate" id="arrange-endDate" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="arrange-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'laydate', 'xmSelect', 'validate'], function () {
+        let $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            laydate = layui.laydate,
+            form = layui.form,
+            xmSelect = layui.xmSelect,
+            arrange = [[${arrange}]],
+            validate = layui.validate,
+            dataPermissionXmlSelect,
+            roleXmSelect,
+            deptXmlSelect;
+
+        form.verify(validate);
+        form.render();
+
+        laydate.render({
+            elem: '#arrange-startDate',
+            trigger: 'click'
+        });
+        laydate.render({
+            elem: '#arrange-endDate',
+            trigger: 'click'
+        });
+
+        initArrangeValue();
+
+        function initArrangeValue() {
+            form.val("arrange-update-form", {
+                "aId": arrange.aid,
+                "oId": arrange.oid,
+                "dId": arrange.did,
+                "startDate": arrange.startDate,
+                "endDate": arrange.endDate
+            });
+        }
+
+        form.on('submit(arrange-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, arrange)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'arrange/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('排产数据修改成功');
+                $('#febs-arrange').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

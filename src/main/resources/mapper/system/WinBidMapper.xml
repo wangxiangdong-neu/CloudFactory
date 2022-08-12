@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.cloudfactory.system.mapper.WinBidMapper">
+    <sql id="countWinBidDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        win_bid wb
+        WHERE 1 = 1
+        <if test="winBid.wbId != null and winBid.wbId != ''">
+            AND wb.wb_id = #{winBid.wbId}
+        </if>
+        <if test="winBid.oId != null and winBid.oId != ''">
+            AND wb.o_id = #{winBid.oId}
+        </if>
+        <if test="winBid.fId != null and winBid.fId != ''">
+            AND wb.f_id = #{winBid.fId}
+        </if>
+    </sql>
+
+    <sql id="findWinBidDetailSql">
+        SELECT
+        wb.f_id fId,
+        wb.o_id oId,
+        wb.wb_id wbId
+        FROM
+        win_bid wb
+        WHERE 1 = 1
+        <if test="winBid.wbId != null and winBid.wbId != ''">
+            AND wb.wb_id = #{winBid.wbId}
+        </if>
+        <if test="winBid.oId != null and winBid.oId != ''">
+            AND wb.o_id = #{winBid.oId}
+        </if>
+        <if test="winBid.fId != null and winBid.fId != ''">
+            AND wb.f_id = #{winBid.fId}
+        </if>
+    </sql>
+
+    <select id="countWinBidDetail" parameterType="winBid" resultType="long">
+        <include refid="countWinBidDetailSql"/>
+    </select>
+
+    <select id="findWinBidDetailPage" parameterType="winBid" resultType="winBid">
+        <include refid="findWinBidDetailSql"/>
+    </select>
+
+    <select id="findWinBidDetail" parameterType="winBid" resultType="winBid">
+        <include refid="findWinBidDetailSql"/>
+    </select>
+
+    <select id="findBywbId" parameterType="long" resultType="winBid">
+        SELECT
+            wb.f_id fId,
+            wb.o_id oId,
+            wb.wb_id wbId
+        FROM
+            win_bid wb
+        WHERE  wb.wb_id = #{wbId}
+    </select>
+</mapper>

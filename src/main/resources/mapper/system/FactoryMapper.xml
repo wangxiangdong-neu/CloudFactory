@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.cloudfactory.system.mapper.FactoryMapper">
+    <sql id="countFactoryDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        factory f
+        WHERE 1 = 1
+        <if test="factory.fname != null and factory.fname != ''">
+            AND f.fname = #{factory.fname}
+        </if>
+        <if test="factory.fId != null and factory.fId != ''">
+            AND f.f_id = #{factory.fId}
+        </if>
+        <if test="factory.uId != null and factory.uId != ''">
+            AND f.u_id = #{factory.uId}
+        </if>
+        <if test="factory.introduction != null and factory.introduction != ''">
+            AND f.introduction = #{factory.introduction}
+        </if>
+        <if test="factory.status != null and factory.status != ''">
+            AND f.status = #{factory.status}
+        </if>
+    </sql>
+
+    <sql id="findFactoryDetailSql">
+        SELECT
+        f.f_id fId,
+        f.u_id uId,
+        f.fname fname,
+        f.introduction introduction,
+        f.status status
+        FROM
+        factory f
+        WHERE 1 = 1
+        <if test="factory.fname != null and factory.fname != ''">
+            AND f.fname = #{factory.fname}
+        </if>
+        <if test="factory.fId != null and factory.fId != ''">
+            AND f.f_id = #{factory.fId}
+        </if>
+        <if test="factory.uId != null and factory.uId != ''">
+            AND f.u_id = #{factory.uId}
+        </if>
+        <if test="factory.introduction != null and factory.introduction != ''">
+            AND f.introduction = #{factory.introduction}
+        </if>
+        <if test="factory.status != null and factory.status != ''">
+            AND f.status = #{factory.status}
+        </if>
+    </sql>
+
+    <select id="countFactoryDetail" parameterType="factory" resultType="long">
+        <include refid="countFactoryDetailSql"/>
+    </select>
+
+    <select id="findFactoryDetailPage" parameterType="factory" resultType="factory">
+        <include refid="findFactoryDetailSql"/>
+    </select>
+
+    <select id="findFactoryDetail" parameterType="factory" resultType="factory">
+        <include refid="findFactoryDetailSql"/>
+    </select>
+
+    <select id="findByName" parameterType="string" resultType="factory">
+        SELECT
+            f.f_id fId,
+            f.u_id uId,
+            f.fname fname,
+            f.introduction introduction,
+            f.status status
+        FROM
+            factory f
+        WHERE  f.fname = #{factory.fname}
+    </select>
+    <select id="findByfId" parameterType="long" resultType="factory">
+        SELECT
+            f.f_id fId,
+            f.u_id uId,
+            f.fname fname,
+            f.introduction introduction,
+            f.status status
+        FROM
+            factory f
+        WHERE  f.f_id = #{fId}
+    </select>
+</mapper>

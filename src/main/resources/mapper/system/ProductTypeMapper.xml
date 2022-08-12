@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.cloudfactory.system.mapper.ProductTypeMapper">
+    <sql id="countProductTypeDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        product_type pt
+        WHERE 1 = 1
+        <if test="productType.type != null and productType.type != ''">
+            AND pt.type = #{productType.type}
+        </if>
+        <if test="productType.ptId != null and productType.ptId != ''">
+            AND pt.pt_id = #{productType.ptId}
+        </if>
+    </sql>
+
+    <sql id="findProductTypeDetailSql">
+        SELECT
+        pt.pt_id ptId,
+        pt.type type
+        FROM
+        product_type pt
+        WHERE 1 = 1
+        <if test="productType.type != null and productType.type != ''">
+            AND pt.type = #{productType.type}
+        </if>
+        <if test="productType.ptId != null and productType.ptId != ''">
+            AND pt.pt_id = #{productType.ptId}
+        </if>
+    </sql>
+
+    <select id="countProductTypeDetail" parameterType="productType" resultType="long">
+        <include refid="countProductTypeDetailSql"/>
+    </select>
+
+    <select id="findProductTypeDetailPage" parameterType="productType" resultType="productType">
+        <include refid="findProductTypeDetailSql"/>
+    </select>
+
+    <select id="findProductTypeDetail" parameterType="productType" resultType="productType">
+        <include refid="findProductTypeDetailSql"/>
+    </select>
+
+    <select id="findByName" parameterType="string" resultType="productType">
+        SELECT
+            pt.pt_id ptId,
+            pt.type type
+        FROM
+            product_type pt
+        WHERE  pt.type = #{productType.type}
+    </select>
+    <select id="findByptId" parameterType="long" resultType="productType">
+        SELECT
+            pt.pt_id ptId,
+            pt.type type
+        FROM
+            product_type pt
+        WHERE  pt.pt_id = #{ptId}
+    </select>
+</mapper>

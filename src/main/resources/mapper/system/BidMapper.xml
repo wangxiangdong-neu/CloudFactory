@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.cloudfactory.system.mapper.BidMapper">
+    <sql id="countBidDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        bid b
+        WHERE 1 = 1
+        <if test="bid.bId != null and bid.bId != ''">
+            AND b.b_id = #{bid.bId}
+        </if>
+        <if test="bid.fId != null and bid.fId != ''">
+            AND b.f_id = #{bid.fId}
+        </if>
+        <if test="bid.oId != null and bid.oId != ''">
+            AND b.o_id = #{bid.oId}
+        </if>
+        <if test="bid.price != null and bid.price != ''">
+            AND b.price = #{bid.price}
+        </if>
+    </sql>
+
+    <sql id="findBidDetailSql">
+        SELECT
+        b.b_id bId,
+        b.f_id fId,
+        b.o_id oId,
+        b.price price
+        FROM
+        bid b
+        WHERE 1 = 1
+        <if test="bid.bId != null and bid.bId != ''">
+            AND b.b_id = #{bid.bId}
+        </if>
+        <if test="bid.fId != null and bid.fId != ''">
+            AND b.f_id = #{bid.fId}
+        </if>
+        <if test="bid.oId != null and bid.oId != ''">
+            AND b.o_id = #{bid.oId}
+        </if>
+        <if test="bid.price != null and bid.price != ''">
+            AND b.price = #{bid.price}
+        </if>
+    </sql>
+
+    <select id="countBidDetail" parameterType="bid" resultType="long">
+        <include refid="countBidDetailSql"/>
+    </select>
+
+    <select id="findBidDetailPage" parameterType="bid" resultType="bid">
+        <include refid="findBidDetailSql"/>
+    </select>
+
+    <select id="findBidDetail" parameterType="bid" resultType="bid">
+        <include refid="findBidDetailSql"/>
+    </select>
+
+<!--    <select id="findByName" parameterType="string" resultType="bid">-->
+<!--        SELECT-->
+<!--            f.f_id fId,-->
+<!--            f.u_id uId,-->
+<!--            f.fname fname,-->
+<!--            f.introduction introduction,-->
+<!--            f.status status-->
+<!--        FROM-->
+<!--            bid f-->
+<!--        WHERE  f.fname = #{bid.fname}-->
+<!--    </select>-->
+    <select id="findBybId" parameterType="long" resultType="bid">
+        SELECT
+            b.b_id bId,
+            b.f_id fId,
+            b.o_id oId,
+            b.price price
+        FROM
+            bid b
+        WHERE  b.b_id = #{bId}
+    </select>
+</mapper>

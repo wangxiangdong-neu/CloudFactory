@@ -1,0 +1,98 @@
+<style>
+    #device-add {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="device-add">
+    <form class="layui-form" action="" lay-filter="device-add-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备编号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="code" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备类型：</label>
+            <div class="layui-input-block">
+                <select name="dtId">
+                    <option value="">请选择</option>
+                    <option value="1">车床</option>
+                    <option value="2">铣床</option>
+                    <option value="3">镗床</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备规格：</label>
+            <div class="layui-input-block">
+                <input type="text" name="format" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备描述：</label>
+            <div class="layui-input-block">
+                <input type="text" name="introduction" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备状态：</label>
+            <div class="layui-input-block">
+                <select name="deviceStatus">
+                    <option value="">请选择</option>
+                    <option value="闲置中">闲置中</option>
+                    <option value="生产中">生产中</option>
+                    <option value="已关闭">已关闭</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备来源：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="dResource" value="自有设备" title="自有设备" checked="">
+                <input type="radio" name="dResource" value="租用设备" title="租用设备">
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <label class="layui-form-label">所属工厂id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="fId" value="1" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="device-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'validate', 'xmSelect'], function () {
+        let $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            xmSelect = layui.xmSelect,
+            validate = layui.validate,
+            dataPermissionXmlSelect,
+            roleXmSelect,
+            deptXmlSelect;
+
+        form.verify(validate);
+        form.render();
+
+        form.on('submit(device-add-form-submit)', function (data) {
+            febs.post(ctx + 'device', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('新增设备成功');
+                $('#febs-device').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

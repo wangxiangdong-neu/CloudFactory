@@ -1,0 +1,251 @@
+<head xmlns:shiro="http://www.w3.org/1999/xhtml">
+    <meta charset="utf-8">
+</head>
+<style>
+    #febs-userorder xm-select {
+        min-height: 30px;
+        line-height: 30px;
+    }
+    #febs-userorder xm-select > .xm-label .scroll .label-content {
+        display: flex;
+        padding: 0 30px 0 10px;
+    }
+</style>
+<script type="text/html" id="order-status">
+    {{#
+    let status = {
+    '已发布': {title: '已发布', color: 'green'},
+    '已中标': {title: '已中标', color: 'orange'},
+    '投标结束': {title: '投标结束', color: 'red'}
+    }[d.status];
+    }}
+    <span class="layui-badge febs-bg-{{status.color}}" style="font-family: 'Microsoft YaHei UI'">{{ status.title }}</span>
+</script>
+<div class="layui-fluid layui-anim febs-anim" id="febs-userorder" lay-title="订单信息">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="userorder-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">订单id</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="oId" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">订单编码</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="ordercode" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">产品名称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="productName" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">收货人</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="receiver" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm" >联系方式</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="recContact" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">订单状态</label>
+                                        <div class="layui-input-inline">
+                                            <select name="status">
+                                                <option value="">请选择</option>
+                                                <option value="已发布">已发布</option>
+                                                <option value="已中标">已中标</option>
+                                                <option value="投标结束">投标结束</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain table-action" id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain table-action" id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table lay-filter="userorderTable" lay-data="{id: 'userorderTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="userorder-option">
+    <a lay-event="detail"><i
+            class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
+    <a lay-event="edit"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+    <a lay-event="del"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'xmSelect'], function () {
+        let $ = layui.jquery,
+            laydate = layui.laydate,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            dropdown = layui.dropdown,
+            $view = $('#febs-userorder'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'oId', type: null},
+            tableIns,
+            createTimeFrom,
+            createTimeTo,
+            deptXmlSelect;
+
+        form.render();
+
+        initTable();
+
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                let checkStatus = table.checkStatus('userorderTable');
+                if (name === 'add') {
+                    febs.modal.open('新增订单', 'super_manager/order/orderAdd', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        yes: function (index, layero) {
+                            $('#userorder-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#userorder-add').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+                if (name === 'delete') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要删除的订单');
+                    } else {
+                        febs.modal.confirm('删除订单', '确定删除该订单？', function () {
+                            let userorderIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                userorderIds.push(item.oid)
+                            });
+                            deleteUserorders(userorderIds.join(','));
+                        });
+                    }
+                }
+            },
+            // 右侧按钮下拉列表
+            options: [{
+                name: 'add',
+                title: '新增订单'
+            }, {
+                name: 'delete',
+                title: '删除订单'
+            }]
+        });
+
+        table.on('tool(userorderTable)', function (obj) {
+            let data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'detail') {
+                febs.modal.view('订单信息', 'super_manager/order/orderDetail/' + data.oid, {
+                    area: $(window).width() <= 750 ? '95%' : '660px'
+                });
+            }
+            if (layEvent === 'del') {
+                febs.modal.confirm('删除订单', '确定删除该订单？', function () {
+                    deleteUserorders(data.oid);
+                });
+            }
+            if (layEvent === 'edit') {
+                febs.modal.open('修改订单', 'super_manager/order/orderUpdate/' + data.oid, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#userorder-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        });
+
+        table.on('sort(userorderTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+        $query.on('click', function () {
+            let params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            sortObject.type = 'null';
+            deptXmlSelect.setValue(['']);
+            createTimeTo = null;
+            createTimeFrom = null;
+            tableIns.reload({where: getQueryParams(true), page: {curr: 1}, initSort: sortObject});
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'userorderTable',
+                url: ctx + 'userorder/list',
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'oid', title: '订单id'},
+                    {field: 'ordercode', title: '订单编码'},
+                    {field: 'productName', title: '产品名称',minWidth:150},
+                    {field: 'purchaseQuantity', title: '订购数量'},
+                    {field: 'deliveryDate', title: '交付日期'},
+                    {field: 'bidDeadline', title: '投标截止日期'},
+                    {field: 'receiver', title: '收货人'},
+                    {field: 'recContact', title: '联系方式'},
+                    {field: 'recAddress', title: '收货人地址'},
+                    {title: '订单状态', templet: '#order-status'},
+                    {title: '操作', toolbar: '#userorder-option'}
+                ]]
+            });
+        }
+
+        function getQueryParams(flag) {
+            let params = $searchForm.serializeJson();
+            return params;
+        }
+
+        function deleteUserorders(userorderIds) {
+            febs.get(ctx + 'userorder/delete/' + userorderIds, null, function () {
+                febs.alert.success('删除订单成功');
+                $query.click();
+            });
+        }
+    })
+</script>

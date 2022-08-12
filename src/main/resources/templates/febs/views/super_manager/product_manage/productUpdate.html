@@ -1,0 +1,107 @@
+<style>
+    #product-update {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="product-update">
+    <form class="layui-form" action="" lay-filter="product-update-form">
+        <div class="layui-form-item layui-hide">
+            <label class="layui-form-label febs-form-item-require">产品id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="pId" data-th-value="${product.pId}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品编码：</label>
+            <div class="layui-input-block">
+                <input type="text" name="code" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品类型：</label>
+            <div class="layui-input-block">
+                <select name="ptId">
+                    <option value="">请选择</option>
+                    <option value="3">珠宝首饰</option>
+                    <option value="4">生活用品</option>
+                    <option value="5">工艺品</option>
+                    <option value="6">手机周边</option>
+                    <option value="7">显卡</option>
+                    <option value="8">iPhone</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品规格：</label>
+            <div class="layui-input-block">
+                <input type="text" name="format" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品描述：</label>
+            <div class="layui-input-block">
+                <input type="text" name="description" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">上级id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="superiorId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="product-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'xmSelect', 'validate'], function () {
+        let $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            xmSelect = layui.xmSelect,
+            product = [[${product}]],
+            validate = layui.validate,
+            dataPermissionXmlSelect,
+            roleXmSelect,
+            deptXmlSelect;
+
+        form.verify(validate);
+        form.render();
+
+        initProductValue();
+
+        function initProductValue() {
+            form.val("product-update-form", {
+                "pId": product.pid,
+                "ptId": product.ptid,
+                "code": product.code,
+                "name": product.name,
+                "format": product.format,
+                "description": product.description,
+                "superiorId": product.superiorId
+            });
+        }
+
+        form.on('submit(product-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, product)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'product/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success(product.name + ' 产品修改成功');
+                $('#febs-product').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

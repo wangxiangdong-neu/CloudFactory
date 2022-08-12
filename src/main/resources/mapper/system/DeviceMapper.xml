@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.cloudfactory.system.mapper.DeviceMapper">
+    <sql id="countDeviceDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        device d
+        WHERE 1 = 1
+        <if test="device.name != null and device.name != ''">
+            AND d.name = #{device.name}
+        </if>
+        <if test="device.dId != null and device.dId != ''">
+            AND d.d_id = #{device.dId}
+        </if>
+        <if test="device.fId != null and device.fId != ''">
+            AND d.f_id = #{device.fId}
+        </if>
+        <if test="device.dtId != null and device.dtId != ''">
+            AND d.dt_id = #{device.dtId}
+        </if>
+        <if test="device.code != null and device.code != ''">
+            AND d.code = #{device.code}
+        </if>
+        <if test="device.format != null and device.format != ''">
+            AND d.format = #{device.format}
+        </if>
+        <if test="device.introduction != null and device.introduction != ''">
+            AND d.introduction = #{device.introduction}
+        </if>
+        <if test="device.deviceStatus != null and device.deviceStatus != ''">
+            AND d.device_status = #{device.deviceStatus}
+        </if>
+        <if test="device.rentalStatus != null and device.rentalStatus != ''">
+            AND d.rental_status = #{device.rentalStatus}
+        </if>
+        <if test="device.dResource != null and device.dResource != ''">
+            AND d.d_resource = #{device.dResource}
+        </if>
+    </sql>
+
+    <sql id="findDeviceDetailSql">
+        SELECT
+        d.d_id dId,
+        d.f_id fId,
+        d.dt_id dtId,
+        d.code code,
+        d.name name,
+        d.format format,
+        d.introduction introduction,
+        d.device_status deviceStatus,
+        d.rental_status rentalStatus,
+        d.d_resource dResource
+        FROM
+        device d
+        WHERE 1 = 1
+        <if test="device.name != null and device.name != ''">
+            AND d.name = #{device.name}
+        </if>
+        <if test="device.dId != null and device.dId != ''">
+            AND d.d_id = #{device.dId}
+        </if>
+        <if test="device.fId != null and device.fId != ''">
+            AND d.f_id = #{device.fId}
+        </if>
+        <if test="device.dtId != null and device.dtId != ''">
+            AND d.dt_id = #{device.dtId}
+        </if>
+        <if test="device.code != null and device.code != ''">
+            AND d.code = #{device.code}
+        </if>
+        <if test="device.format != null and device.format != ''">
+            AND d.format = #{device.format}
+        </if>
+        <if test="device.introduction != null and device.introduction != ''">
+            AND d.introduction = #{device.introduction}
+        </if>
+        <if test="device.deviceStatus != null and device.deviceStatus != ''">
+            AND d.device_status = #{device.deviceStatus}
+        </if>
+        <if test="device.rentalStatus != null and device.rentalStatus != ''">
+            AND d.rental_status = #{device.rentalStatus}
+        </if>
+        <if test="device.dResource != null and device.dResource != ''">
+            AND d.d_resource = #{device.dResource}
+        </if>
+    </sql>
+
+    <select id="countDeviceDetail" parameterType="device" resultType="long">
+        <include refid="countDeviceDetailSql"/>
+    </select>
+
+    <select id="findDeviceDetailPage" parameterType="device" resultType="device">
+        <include refid="findDeviceDetailSql"/>
+    </select>
+
+    <select id="findDeviceDetail" parameterType="device" resultType="device">
+        <include refid="findDeviceDetailSql"/>
+    </select>
+
+    <select id="findByName" parameterType="string" resultType="device">
+        SELECT
+            d.d_id dId,
+            d.f_id fId,
+            d.dt_id dtId,
+            d.code code,
+            d.name name,
+            d.format format,
+            d.introduction introduction,
+            d.device_status deviceStatus,
+            d.rental_status rentalStatus,
+            d.d_resource dResource
+        FROM
+            device d
+        WHERE  d.name = #{device.name}
+    </select>
+    <select id="findBydId" parameterType="long" resultType="device">
+        SELECT
+            d.d_id dId,
+            d.f_id fId,
+            d.dt_id dtId,
+            d.code code,
+            d.name name,
+            d.format format,
+            d.introduction introduction,
+            d.device_status deviceStatus,
+            d.rental_status rentalStatus,
+            d.d_resource dResource
+        FROM
+            device d
+        WHERE  d.d_id = #{dId}
+    </select>
+    <select id="findByfId" parameterType="long" resultType="device">
+        SELECT
+            d.d_id dId,
+            d.f_id fId,
+            d.dt_id dtId,
+            d.code code,
+            d.name name,
+            d.format format,
+            d.introduction introduction,
+            d.device_status deviceStatus,
+            d.rental_status rentalStatus,
+            d.d_resource dResource
+        FROM
+            device d
+        WHERE  d.f_id = #{fId}
+    </select>
+</mapper>
